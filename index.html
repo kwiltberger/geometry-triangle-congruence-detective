@@ -5,736 +5,334 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Triangle Congruence Detective Agency</title>
 <style>
-    :root {
-        --navy: #0f2d44;
-        --blue: #2f80a8;
-        --light-blue: #f0f7fb;
-        --green: #3ca65c;
-        --light-green: #eefaf1;
-        --yellow: #f2b705;
-        --light-yellow: #fff8e6;
-        --purple: #9c64a6;
-        --light-purple: #f3e5f5;
-        --red: #c0392b;
-        --light-red: #fdecea;
-        --gray: #d6e6ef;
-        --text: #1f2933;
-    }
-
-    body {
-        font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #f0f7fb, #eefaf1);
-        color: var(--text);
-        margin: 0;
-        padding: 20px;
-    }
-
-    .container {
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-
-    .hero {
-        background: var(--navy);
-        color: white;
-        padding: 28px;
-        border-radius: 14px;
-        text-align: center;
-        box-shadow: 0 4px 14px rgba(0,0,0,0.18);
-    }
-
-    .hero h1 {
-        margin: 0;
-        font-size: 34px;
-    }
-
-    .hero p {
-        margin: 10px 0 0;
-        font-size: 18px;
-    }
-
-    .card {
-        background: white;
-        border-left: 6px solid var(--blue);
-        padding: 18px;
-        border-radius: 12px;
-        margin-top: 18px;
-        box-shadow: 0 2px 8px rgba(15,45,68,0.08);
-    }
-
-    .yellow { border-left-color: var(--yellow); background: var(--light-yellow); }
-    .green { border-left-color: var(--green); background: var(--light-green); }
-    .purple { border-left-color: var(--purple); background: var(--light-purple); }
-    .red { border-left-color: var(--red); background: var(--light-red); }
-
-    button {
-        background: var(--navy);
-        color: white;
-        border: none;
-        padding: 12px 18px;
-        border-radius: 8px;
-        cursor: pointer;
-        font-size: 16px;
-        margin: 6px 6px 6px 0;
-    }
-
-    button:hover {
-        background: #163d5c;
-    }
-
-    .choice {
-        display: inline-block;
-        background: white;
-        border: 2px solid var(--gray);
-        border-radius: 10px;
-        padding: 12px 14px;
-        margin: 6px;
-        cursor: pointer;
-        min-width: 130px;
-        text-align: center;
-        font-weight: bold;
-    }
-
-    .choice:hover {
-        border-color: var(--blue);
-        background: #f0f7fb;
-    }
-
-    .choice.selected {
-        background: var(--navy);
-        color: white;
-        border-color: var(--navy);
-    }
-
-    .layout {
-        display: grid;
-        grid-template-columns: 1.7fr 1fr;
-        gap: 18px;
-        align-items: start;
-    }
-
-    @media (max-width: 850px) {
-        .layout {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .case-file {
-        background: #fffdf5;
-        border: 3px solid #d9b86c;
-        border-radius: 14px;
-        padding: 18px;
-        position: relative;
-    }
-
-    .folder-tab {
-        display: inline-block;
-        background: #d9b86c;
-        color: #3b2b12;
-        padding: 8px 16px;
-        border-radius: 8px 8px 0 0;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-
-    .diagram-box {
-        background: white;
-        border: 1px solid var(--gray);
-        border-radius: 10px;
-        padding: 10px;
-        text-align: center;
-        overflow-x: auto;
-    }
-
-    svg {
-        max-width: 100%;
-        height: auto;
-    }
-
-    .evidence-list p {
-        background: white;
-        border: 1px solid var(--gray);
-        padding: 8px 10px;
-        border-radius: 8px;
-        margin: 6px 0;
-    }
-
-    textarea {
-        width: 100%;
-        min-height: 90px;
-        border: 1px solid #b8c7d1;
-        border-radius: 8px;
-        padding: 10px;
-        font-family: Arial, sans-serif;
-        font-size: 15px;
-        box-sizing: border-box;
-    }
-
-    .feedback {
-        display: none;
-        padding: 14px;
-        border-radius: 10px;
-        margin-top: 12px;
-        font-weight: bold;
-    }
-
-    .feedback.correct {
-        display: block;
-        background: var(--light-green);
-        color: #1f6b35;
-        border-left: 6px solid var(--green);
-    }
-
-    .feedback.incorrect {
-        display: block;
-        background: var(--light-red);
-        color: #8a1f11;
-        border-left: 6px solid var(--red);
-    }
-
-    .progress-bar {
-        height: 18px;
-        background: #d6e6ef;
-        border-radius: 999px;
-        overflow: hidden;
-        margin-top: 10px;
-    }
-
-    .progress-fill {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, var(--green), var(--blue));
-        transition: width 0.4s ease;
-    }
-
-    .case-dots {
-        display: flex;
-        gap: 7px;
-        flex-wrap: wrap;
-        margin-top: 12px;
-    }
-
-    .dot {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: #d6e6ef;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13px;
-        font-weight: bold;
-        color: #5b6b7a;
-    }
-
-    .dot.solved {
-        background: var(--green);
-        color: white;
-    }
-
-    .badge {
-        display: inline-block;
-        background: var(--navy);
-        color: white;
-        padding: 8px 12px;
-        border-radius: 999px;
-        margin: 4px;
-        font-size: 14px;
-    }
-
-    .stamp {
-        font-size: 32px;
-        font-weight: bold;
-        color: var(--green);
-        border: 4px solid var(--green);
-        display: inline-block;
-        padding: 10px 16px;
-        transform: rotate(-5deg);
-        margin-top: 10px;
-        border-radius: 8px;
-    }
-
-    .stamp.red {
-        color: var(--red);
-        border-color: var(--red);
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    .certificate {
-        text-align: center;
-        background: white;
-        border: 4px double var(--navy);
-        border-radius: 14px;
-        padding: 30px;
-        margin-top: 20px;
-    }
-
-    .completion-code {
-        background: var(--navy);
-        color: white;
-        padding: 12px 18px;
-        display: inline-block;
-        border-radius: 8px;
-        font-size: 20px;
-        letter-spacing: 1px;
-        margin-top: 12px;
-    }
+:root{
+--navy:#0f2d44;--blue:#2f80a8;--light-blue:#f0f7fb;--green:#3ca65c;--light-green:#eefaf1;--yellow:#f2b705;--light-yellow:#fff8e6;--purple:#9c64a6;--light-purple:#f3e5f5;--red:#c0392b;--light-red:#fdecea;--gray:#d6e6ef;--text:#1f2933;
+}
+body{font-family:Arial,sans-serif;background:linear-gradient(135deg,#f0f7fb,#eefaf1);color:var(--text);margin:0;padding:20px}
+.container{max-width:1100px;margin:0 auto}
+.hero{background:var(--navy);color:white;padding:26px;border-radius:14px;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.hero h1{margin:0;font-size:32px}
+.card{background:white;border-left:6px solid var(--blue);padding:18px;border-radius:12px;margin-top:18px;box-shadow:0 2px 8px rgba(15,45,68,.08)}
+.yellow{background:var(--light-yellow);border-left-color:var(--yellow)}
+.green{background:var(--light-green);border-left-color:var(--green)}
+.purple{background:var(--light-purple);border-left-color:var(--purple)}
+.red{background:var(--light-red);border-left-color:var(--red)}
+button{background:var(--navy);color:white;border:none;padding:12px 18px;border-radius:8px;cursor:pointer;font-size:16px;margin:6px 6px 6px 0}
+button:hover{background:#163d5c}
+.restart{background:var(--red)}
+.layout{display:grid;grid-template-columns:1.7fr 1fr;gap:18px;align-items:start}
+@media(max-width:850px){.layout{grid-template-columns:1fr}}
+.hidden{display:none}
+.case-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.case-btn{background:#d6e6ef;color:#1f2933;padding:9px 12px;border-radius:8px;border:none;cursor:pointer}
+.case-btn.current{background:var(--blue);color:white}
+.case-btn.closed{background:var(--green);color:white}
+.case-btn.open{background:var(--yellow);color:#1f2933}
+.case-file{background:#fffdf5;border:3px solid #d9b86c;border-radius:14px;padding:18px}
+.folder-tab{display:inline-block;background:#d9b86c;color:#3b2b12;padding:8px 16px;border-radius:8px 8px 0 0;font-weight:bold;margin-bottom:10px}
+.diagram-box{background:white;border:1px solid var(--gray);border-radius:10px;padding:10px;text-align:center;overflow-x:auto}
+svg{max-width:100%;height:auto}
+.evidence-list p{background:white;border:1px solid var(--gray);padding:8px 10px;border-radius:8px;margin:6px 0}
+.choice{display:inline-block;background:white;border:2px solid var(--gray);border-radius:10px;padding:12px 14px;margin:6px;cursor:pointer;min-width:130px;text-align:center;font-weight:bold}
+.choice:hover{border-color:var(--blue);background:#f0f7fb}
+.choice.selected{background:var(--navy);color:white;border-color:var(--navy)}
+.yesno.selected.yes{background:var(--green);color:white;border-color:var(--green)}
+.yesno.selected.no{background:var(--red);color:white;border-color:var(--red)}
+.feedback{display:none;padding:14px;border-radius:10px;margin-top:12px;font-weight:bold}
+.feedback.correct{display:block;background:var(--light-green);color:#1f6b35;border-left:6px solid var(--green)}
+.feedback.incorrect{display:block;background:var(--light-red);color:#8a1f11;border-left:6px solid var(--red)}
+.progress-bar{height:18px;background:#d6e6ef;border-radius:999px;overflow:hidden;margin-top:10px}
+.progress-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--blue));transition:width .4s ease}
+.badge{display:inline-block;background:var(--navy);color:white;padding:8px 12px;border-radius:999px;margin:4px;font-size:14px}
+.stamp{font-size:28px;font-weight:bold;color:var(--green);border:4px solid var(--green);display:inline-block;padding:10px 16px;transform:rotate(-5deg);margin-top:10px;border-radius:8px}
+.stamp.red{color:var(--red);border-color:var(--red)}
+.certificate{text-align:center;background:white;border:4px double var(--navy);border-radius:14px;padding:30px;margin-top:20px}
+.completion-code{background:var(--navy);color:white;padding:12px 18px;display:inline-block;border-radius:8px;font-size:20px;letter-spacing:1px;margin-top:12px}
 </style>
 </head>
-
 <body>
 <div class="container">
 
-    <section id="startScreen">
-        <div class="hero">
-            <h1>🕵️ Triangle Congruence Detective Agency</h1>
-            <p>Evidence never lies. Can you solve the triangle cases?</p>
-        </div>
+<section id="startScreen">
+<div class="hero">
+<h1>🕵️ Triangle Congruence Detective Agency</h1>
+<p>Evidence never lies. Can you close every case?</p>
+</div>
+<div class="card">
+<h2 style="color:var(--navy);margin-top:0;">Your Mission</h2>
+<p>You are a Geometry Detective. Each case file contains two triangles and evidence.</p>
+<p>For each case, choose the best theorem and decide whether the triangles are congruent.</p>
+<p><strong>Possible verdicts:</strong> SSS, SAS, ASA, AAS, or Not Enough Evidence.</p>
+<button onclick="beginInvestigation()">Begin Investigation</button>
+</div>
+</section>
 
-        <div class="card">
-            <h2 style="color:var(--navy); margin-top:0;">Your Mission</h2>
-            <p>You have been hired as a Geometry Detective. Each case file contains two triangles and a set of clues.</p>
-            <p>Your job is to examine the evidence, choose the correct congruence verdict, and explain your reasoning.</p>
-            <p><strong>Possible verdicts:</strong> SSS, SAS, ASA, AAS, or Not Enough Evidence.</p>
-            <button onclick="beginInvestigation()">Begin Investigation</button>
-        </div>
-    </section>
+<section id="gameScreen" class="hidden">
+<div class="hero">
+<h1>Triangle Congruence Detective Agency</h1>
+<p id="rankDisplay">Rank: Rookie Detective</p>
+<button class="restart" onclick="restartActivity()">Restart Investigation</button>
+</div>
 
-    <section id="gameScreen" class="hidden">
-        <div class="hero">
-            <h1>Triangle Congruence Detective Agency</h1>
-            <p id="rankDisplay">Rank: Rookie Detective</p>
-        </div>
+<div class="card">
+<strong>Case Navigation:</strong>
+<div class="case-nav" id="caseNav"></div>
+</div>
 
-        <div class="layout">
-            <main>
-                <div class="case-file">
-                    <div class="folder-tab" id="caseNumber">CASE 001</div>
-                    <h2 id="caseTitle" style="color:var(--navy); margin-top:0;"></h2>
-                    <p id="casePrompt"></p>
+<div class="layout">
+<main>
+<div class="case-file">
+<div class="folder-tab" id="caseNumber">CASE 001</div>
+<h2 id="caseTitle" style="color:var(--navy);margin-top:0;"></h2>
+<p id="casePrompt"></p>
+<div class="diagram-box" id="diagramBox"></div>
+</div>
 
-                    <div class="diagram-box" id="diagramBox"></div>
-                </div>
+<div class="card yellow">
+<h3 style="margin-top:0;color:var(--navy);">Evidence Collected</h3>
+<div class="evidence-list" id="evidenceList"></div>
+</div>
 
-                <div class="card yellow">
-                    <h3 style="margin-top:0;color:var(--navy);">Evidence Collected</h3>
-                    <div class="evidence-list" id="evidenceList"></div>
-                </div>
+<div class="card green">
+<h3 style="margin-top:0;color:var(--navy);">Question 1: Which theorem best fits the evidence?</h3>
+<div>
+<div class="choice theorem" onclick="selectVerdict('SSS',this)">SSS</div>
+<div class="choice theorem" onclick="selectVerdict('SAS',this)">SAS</div>
+<div class="choice theorem" onclick="selectVerdict('ASA',this)">ASA</div>
+<div class="choice theorem" onclick="selectVerdict('AAS',this)">AAS</div>
+<div class="choice theorem" onclick="selectVerdict('NEI',this)">Not Enough Evidence</div>
+</div>
 
-                <div class="card green">
-                    <h3 style="margin-top:0;color:var(--navy);">Detective's Verdict</h3>
-                    <div id="choices">
-                        <div class="choice" onclick="selectVerdict('SSS')">SSS</div>
-                        <div class="choice" onclick="selectVerdict('SAS')">SAS</div>
-                        <div class="choice" onclick="selectVerdict('ASA')">ASA</div>
-                        <div class="choice" onclick="selectVerdict('AAS')">AAS</div>
-                        <div class="choice" onclick="selectVerdict('NEI')">Not Enough Evidence</div>
-                    </div>
+<h3 style="color:var(--navy);">Question 2: Based on the evidence, are the triangles congruent?</h3>
+<div>
+<div class="choice yesno" onclick="selectCongruence('yes',this)">Yes</div>
+<div class="choice yesno" onclick="selectCongruence('no',this)">No</div>
+</div>
 
-                    <h3 style="color:var(--navy);">Detective Notes</h3>
-                    <textarea id="notes" placeholder="Explain your reasoning using geometry vocabulary. Example: I chose SAS because two sides and the included angle are congruent."></textarea>
+<button onclick="submitInvestigation()">Submit Investigation</button>
+<button onclick="previousCase()">Previous Case</button>
+<button onclick="nextCase()">Next Case</button>
 
-                    <button onclick="submitVerdict()">Submit Investigation</button>
-                    <button onclick="nextCase()">Next Case</button>
+<div id="feedback" class="feedback"></div>
+</div>
+</main>
 
-                    <div id="feedback" class="feedback"></div>
-                </div>
-            </main>
+<aside>
+<div class="card purple">
+<h3 style="margin-top:0;color:var(--navy);">Investigation Status</h3>
+<p id="progressText">0 of 8 cases closed</p>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+</div>
 
-            <aside>
-                <div class="card purple">
-                    <h3 style="margin-top:0;color:var(--navy);">Case Progress</h3>
-                    <p id="progressText">0 of 8 cases closed</p>
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progressFill"></div>
-                    </div>
-                    <div class="case-dots" id="caseDots"></div>
-                </div>
+<div class="card">
+<h3 style="margin-top:0;color:var(--navy);">Detective Badges</h3>
+<div id="badges"><span class="badge">Rookie Detective</span></div>
+</div>
 
-                <div class="card">
-                    <h3 style="margin-top:0;color:var(--navy);">Detective Badges</h3>
-                    <div id="badges">
-                        <span class="badge">Rookie Detective</span>
-                    </div>
-                </div>
+<div class="card">
+<h3 style="margin-top:0;color:var(--navy);">Notebook Summary</h3>
+<p><strong>SSS:</strong> Three sides.</p>
+<p><strong>SAS:</strong> Two sides and the included angle.</p>
+<p><strong>ASA:</strong> Two angles and the included side.</p>
+<p><strong>AAS:</strong> Two angles and a non-included side.</p>
+<p><strong>SSA:</strong> Not enough evidence.</p>
+<p><strong>AAA:</strong> Similar, not necessarily congruent.</p>
+</div>
+</aside>
+</div>
+</section>
 
-                <div class="card">
-                    <h3 style="margin-top:0;color:var(--navy);">Notebook Summary</h3>
-                    <p><strong>SSS:</strong> Three sides.</p>
-                    <p><strong>SAS:</strong> Two sides and the included angle.</p>
-                    <p><strong>ASA:</strong> Two angles and the included side.</p>
-                    <p><strong>AAS:</strong> Two angles and a non-included side.</p>
-                    <p><strong>SSA:</strong> Not enough evidence.</p>
-                    <p><strong>AAA:</strong> Similar, not necessarily congruent.</p>
-                </div>
-            </aside>
-        </div>
-    </section>
-
-    <section id="finishScreen" class="hidden">
-        <div class="hero">
-            <h1>🏆 Investigation Complete</h1>
-            <p>You solved the Triangle Congruence Detective Agency case set.</p>
-        </div>
-
-        <div class="certificate">
-            <h2 style="color:var(--navy);">Certificate of Achievement</h2>
-            <h1>Master Geometry Detective</h1>
-            <p>This certifies that you investigated triangle congruence cases using evidence, reasoning, and correct theorem selection.</p>
-            <div class="completion-code">Completion Code: DETECTIVE-642</div>
-            <p style="margin-top:20px;">Submit this code if your teacher asks for it.</p>
-        </div>
-    </section>
+<section id="finishScreen" class="hidden">
+<div class="hero">
+<h1>🏆 Investigation Complete</h1>
+<p>All 8 cases closed.</p>
+</div>
+<div class="certificate">
+<h2 style="color:var(--navy);">Certificate of Achievement</h2>
+<h1>Master Geometry Detective</h1>
+<p>Cases Solved: 8/8</p>
+<p>Evidence Evaluated: 24+ clues</p>
+<p>Congruence Accuracy: Complete</p>
+<div class="completion-code">Completion Code: DETECTIVE-642</div>
+<p style="margin-top:20px;">Submit this code if your teacher asks for it.</p>
+<button onclick="restartActivity()">Restart Investigation</button>
+</div>
+</section>
 
 </div>
 
 <script>
-const cases = [
-    {
-        number: "CASE 001",
-        title: "The Three Matching Sides",
-        prompt: "The two triangles have three pairs of corresponding sides marked congruent.",
-        verdict: "SSS",
-        evidence: [
-            "Side AB matches side DE.",
-            "Side BC matches side EF.",
-            "Side AC matches side DF."
-        ],
-        feedback: "CASE CLOSED. Three corresponding sides are congruent, so SSS proves the triangles are congruent.",
-        hint: "Look for three pairs of side markings.",
-        diagram: "sss"
-    },
-    {
-        number: "CASE 002",
-        title: "The Sandwiched Angle",
-        prompt: "The two triangles have two sides and the angle between them marked congruent.",
-        verdict: "SAS",
-        evidence: [
-            "One pair of corresponding sides is marked congruent.",
-            "A second pair of corresponding sides is marked congruent.",
-            "The included angle between those sides is marked congruent."
-        ],
-        feedback: "CASE CLOSED. The angle is included between the two marked sides, so SAS proves congruence.",
-        hint: "Check whether the marked angle is between the two marked sides.",
-        diagram: "sas"
-    },
-    {
-        number: "CASE 003",
-        title: "The Trapped Side",
-        prompt: "The two triangles have two angles and the side between them marked congruent.",
-        verdict: "ASA",
-        evidence: [
-            "Two pairs of corresponding angles are marked congruent.",
-            "The side between the two marked angles is marked congruent."
-        ],
-        feedback: "CASE CLOSED. The side is included between the two marked angles, so ASA proves congruence.",
-        hint: "Look for whether the marked side is between the two marked angles.",
-        diagram: "asa"
-    },
-    {
-        number: "CASE 004",
-        title: "The Outside Side",
-        prompt: "The two triangles have two angles and a side not between them marked congruent.",
-        verdict: "AAS",
-        evidence: [
-            "Two pairs of corresponding angles are marked congruent.",
-            "One pair of corresponding sides is marked congruent.",
-            "The marked side is not between the two marked angles."
-        ],
-        feedback: "CASE CLOSED. Two angles and a non-included side prove congruence by AAS.",
-        hint: "If the side is outside the two angles, think AAS.",
-        diagram: "aas"
-    },
-    {
-        number: "CASE 005",
-        title: "The False Lead",
-        prompt: "The triangles show two sides and a non-included angle.",
-        verdict: "NEI",
-        evidence: [
-            "Two pairs of corresponding sides are marked.",
-            "One angle is marked.",
-            "The angle is not included between the two sides."
-        ],
-        feedback: "CASE CLOSED. This is SSA, which does not always prove triangle congruence.",
-        hint: "This may look like SAS, but is the angle included?",
-        diagram: "ssa"
-    },
-    {
-        number: "CASE 006",
-        title: "Same Angles, Different Size",
-        prompt: "The triangles show three pairs of matching angles.",
-        verdict: "NEI",
-        evidence: [
-            "Three pairs of corresponding angles are marked congruent.",
-            "No side lengths are marked congruent."
-        ],
-        feedback: "CASE CLOSED. AAA can show similarity, but it does not prove congruence.",
-        hint: "Angles alone do not lock in size.",
-        diagram: "aaa"
-    },
-    {
-        number: "CASE 007",
-        title: "The Mixed Evidence Case",
-        prompt: "The triangles show two angles and one side. The side is between the two angles.",
-        verdict: "ASA",
-        evidence: [
-            "Two pairs of corresponding angles are marked congruent.",
-            "The marked side is included between the two angles."
-        ],
-        feedback: "CASE CLOSED. This is ASA because the side is included between the two marked angles.",
-        hint: "Included side means the side is trapped between the two angles.",
-        diagram: "asa"
-    },
-    {
-        number: "CASE 008",
-        title: "Final Investigation",
-        prompt: "The triangles show two sides and one angle. The angle is between the two sides.",
-        verdict: "SAS",
-        evidence: [
-            "Two pairs of corresponding sides are marked congruent.",
-            "The marked angle is included between the two marked sides."
-        ],
-        feedback: "CASE CLOSED. This is SAS because the included angle is between the two marked sides.",
-        hint: "If the angle is sandwiched between two sides, think SAS.",
-        diagram: "sas"
-    }
+const cases=[
+{number:"CASE 001",title:"The Three Matching Sides",prompt:"The two triangles have three pairs of corresponding sides marked congruent.",verdict:"SSS",congruent:"yes",evidence:["Side AB matches side DE.","Side BC matches side EF.","Side AC matches side DF."],feedback:"Three corresponding sides are congruent, so SSS proves the triangles are congruent.",hint:"Look for three pairs of side markings.",diagram:"sss"},
+{number:"CASE 002",title:"The Sandwiched Angle",prompt:"The two triangles have two sides and the angle between them marked congruent.",verdict:"SAS",congruent:"yes",evidence:["One pair of corresponding sides is marked congruent.","A second pair of corresponding sides is marked congruent.","The included angle between those sides is marked congruent."],feedback:"The angle is included between the two marked sides, so SAS proves congruence.",hint:"Check whether the marked angle is between the two marked sides.",diagram:"sas"},
+{number:"CASE 003",title:"The Trapped Side",prompt:"The two triangles have two angles and the side between them marked congruent.",verdict:"ASA",congruent:"yes",evidence:["Two pairs of corresponding angles are marked congruent.","The side between the two marked angles is marked congruent."],feedback:"The side is included between the two marked angles, so ASA proves congruence.",hint:"Look for whether the marked side is between the two marked angles.",diagram:"asa"},
+{number:"CASE 004",title:"The Outside Side",prompt:"The two triangles have two angles and a side not between them marked congruent.",verdict:"AAS",congruent:"yes",evidence:["Two pairs of corresponding angles are marked congruent.","One pair of corresponding sides is marked congruent.","The marked side is not between the two marked angles."],feedback:"Two angles and a non-included side prove congruence by AAS.",hint:"If the side is outside the two angles, think AAS.",diagram:"aas"},
+{number:"CASE 005",title:"The False Lead",prompt:"The triangles show two sides and a non-included angle.",verdict:"NEI",congruent:"no",evidence:["Two pairs of corresponding sides are marked.","One angle is marked.","The angle is not included between the two sides."],feedback:"This is SSA, which does not always prove triangle congruence.",hint:"This may look like SAS, but is the angle included?",diagram:"ssa"},
+{number:"CASE 006",title:"Same Angles, Different Size",prompt:"The triangles show three pairs of matching angles.",verdict:"NEI",congruent:"no",evidence:["Three pairs of corresponding angles are marked congruent.","No side lengths are marked congruent."],feedback:"AAA can show similarity, but it does not prove congruence.",hint:"Angles alone do not lock in size.",diagram:"aaa"},
+{number:"CASE 007",title:"The Mixed Evidence Case",prompt:"The triangles show two angles and one side. The side is between the two angles.",verdict:"ASA",congruent:"yes",evidence:["Two pairs of corresponding angles are marked congruent.","The marked side is included between the two angles."],feedback:"This is ASA because the side is included between the two marked angles.",hint:"Included side means the side is trapped between the two angles.",diagram:"asa"},
+{number:"CASE 008",title:"Final Investigation",prompt:"The triangles show two sides and one angle. The angle is between the two sides.",verdict:"SAS",congruent:"yes",evidence:["Two pairs of corresponding sides are marked congruent.","The marked angle is included between the two marked sides."],feedback:"This is SAS because the included angle is between the two marked sides.",hint:"If the angle is sandwiched between two sides, think SAS.",diagram:"sas"}
 ];
 
-let currentCase = 0;
-let selectedVerdict = "";
-let solved = Array(cases.length).fill(false);
+let currentCase=0;
+let selectedVerdict="";
+let selectedCongruence="";
+let solved=Array(cases.length).fill(false);
+let attempted=Array(cases.length).fill(false);
 
-function beginInvestigation() {
-    document.getElementById("startScreen").classList.add("hidden");
-    document.getElementById("gameScreen").classList.remove("hidden");
-    buildDots();
-    loadCase();
+function beginInvestigation(){
+document.getElementById("startScreen").classList.add("hidden");
+document.getElementById("gameScreen").classList.remove("hidden");
+buildNav();
+loadCase();
 }
 
-function buildDots() {
-    const dots = document.getElementById("caseDots");
-    dots.innerHTML = "";
-    cases.forEach((_, i) => {
-        const d = document.createElement("div");
-        d.className = "dot";
-        d.id = "dot" + i;
-        d.textContent = i + 1;
-        dots.appendChild(d);
-    });
+function buildNav(){
+const nav=document.getElementById("caseNav");
+nav.innerHTML="";
+cases.forEach((c,i)=>{
+const b=document.createElement("button");
+b.textContent="Case "+(i+1);
+b.className="case-btn";
+b.onclick=()=>{currentCase=i;loadCase();};
+b.id="nav"+i;
+nav.appendChild(b);
+});
 }
 
-function loadCase() {
-    const c = cases[currentCase];
-
-    document.getElementById("caseNumber").textContent = c.number;
-    document.getElementById("caseTitle").textContent = c.title;
-    document.getElementById("casePrompt").textContent = c.prompt;
-    document.getElementById("diagramBox").innerHTML = makeDiagram(c.diagram);
-
-    document.getElementById("evidenceList").innerHTML = c.evidence.map(e => `<p>✔ ${e}</p>`).join("");
-    document.getElementById("notes").value = "";
-    selectedVerdict = "";
-
-    document.querySelectorAll(".choice").forEach(el => el.classList.remove("selected"));
-
-    const feedback = document.getElementById("feedback");
-    feedback.className = "feedback";
-    feedback.style.display = "none";
-    feedback.innerHTML = "";
-
-    updateProgress();
+function loadCase(){
+const c=cases[currentCase];
+document.getElementById("caseNumber").textContent=c.number;
+document.getElementById("caseTitle").textContent=c.title;
+document.getElementById("casePrompt").textContent=c.prompt;
+document.getElementById("diagramBox").innerHTML=makeDiagram(c.diagram);
+document.getElementById("evidenceList").innerHTML=c.evidence.map(e=>`<p>✔ ${e}</p>`).join("");
+selectedVerdict="";
+selectedCongruence="";
+document.querySelectorAll(".choice").forEach(el=>el.classList.remove("selected","yes","no"));
+const f=document.getElementById("feedback");
+f.className="feedback";
+f.style.display="none";
+f.innerHTML="";
+updateProgress();
 }
 
-function selectVerdict(v) {
-    selectedVerdict = v;
-    document.querySelectorAll(".choice").forEach(el => el.classList.remove("selected"));
-    event.target.classList.add("selected");
+function selectVerdict(v,el){
+selectedVerdict=v;
+document.querySelectorAll(".theorem").forEach(x=>x.classList.remove("selected"));
+el.classList.add("selected");
 }
 
-function submitVerdict() {
-    const c = cases[currentCase];
-    const notes = document.getElementById("notes").value.trim();
-    const feedback = document.getElementById("feedback");
-
-    if (!selectedVerdict) {
-        feedback.className = "feedback incorrect";
-        feedback.innerHTML = "Choose a verdict before submitting your investigation.";
-        return;
-    }
-
-    if (notes.length < 20) {
-        feedback.className = "feedback incorrect";
-        feedback.innerHTML = "Add more detail to your detective notes. Explain why your verdict makes sense.";
-        return;
-    }
-
-    if (selectedVerdict === c.verdict) {
-        solved[currentCase] = true;
-        feedback.className = "feedback correct";
-        feedback.innerHTML = `<div class="stamp">CASE CLOSED</div><p>${c.feedback}</p><p><strong>Mastery Tip:</strong> Always match the evidence to the theorem before making a conclusion.</p>`;
-    } else {
-        feedback.className = "feedback incorrect";
-        feedback.innerHTML = `<div class="stamp red">REOPEN CASE</div><p>Not quite yet. ${c.hint}</p>`;
-    }
-
-    updateProgress();
+function selectCongruence(v,el){
+selectedCongruence=v;
+document.querySelectorAll(".yesno").forEach(x=>x.classList.remove("selected","yes","no"));
+el.classList.add("selected",v);
 }
 
-function nextCase() {
-    if (currentCase < cases.length - 1) {
-        currentCase++;
-        loadCase();
-    } else {
-        if (solved.every(Boolean)) {
-            document.getElementById("gameScreen").classList.add("hidden");
-            document.getElementById("finishScreen").classList.remove("hidden");
-        } else {
-            alert("Some cases are still unsolved. Go back and close every case before finishing.");
-        }
-    }
+function submitInvestigation(){
+const c=cases[currentCase];
+attempted[currentCase]=true;
+const f=document.getElementById("feedback");
+if(!selectedVerdict||!selectedCongruence){
+f.className="feedback incorrect";
+f.innerHTML="Choose both a theorem verdict and Yes/No before submitting.";
+updateProgress();
+return;
+}
+if(selectedVerdict===c.verdict&&selectedCongruence===c.congruent){
+solved[currentCase]=true;
+f.className="feedback correct";
+f.innerHTML=`<div class="stamp">CASE CLOSED</div><p>${c.feedback}</p><p><strong>Mastery Tip:</strong> Match the evidence to the theorem before deciding congruence.</p>`;
+}else{
+f.className="feedback incorrect";
+f.innerHTML=`<div class="stamp red">REOPEN CASE</div><p>${c.hint}</p>`;
+}
+updateProgress();
+if(solved.every(Boolean)){
+setTimeout(()=>finishActivity(),900);
+}
 }
 
-function updateProgress() {
-    const count = solved.filter(Boolean).length;
-    const percent = Math.round((count / cases.length) * 100);
-
-    document.getElementById("progressText").textContent = `${count} of ${cases.length} cases closed`;
-    document.getElementById("progressFill").style.width = percent + "%";
-
-    solved.forEach((s, i) => {
-        const dot = document.getElementById("dot" + i);
-        if (dot) dot.className = s ? "dot solved" : "dot";
-    });
-
-    let rank = "Rookie Detective";
-    if (count >= 2) rank = "Evidence Analyst";
-    if (count >= 4) rank = "Triangle Specialist";
-    if (count >= 6) rank = "Congruence Investigator";
-    if (count === 8) rank = "Master Geometry Detective";
-
-    document.getElementById("rankDisplay").textContent = "Rank: " + rank;
-
-    const badges = ["Rookie Detective"];
-    if (count >= 2) badges.push("SSS Specialist");
-    if (count >= 4) badges.push("Angle Expert");
-    if (count >= 6) badges.push("Evidence Collector");
-    if (count === 8) badges.push("Congruence Master");
-
-    document.getElementById("badges").innerHTML = badges.map(b => `<span class="badge">🏅 ${b}</span>`).join("");
+function nextCase(){
+currentCase=(currentCase+1)%cases.length;
+loadCase();
 }
 
-function makeDiagram(type) {
-    const labels = {
-        sss: "SSS Evidence",
-        sas: "SAS Evidence",
-        asa: "ASA Evidence",
-        aas: "AAS Evidence",
-        ssa: "SSA False Lead",
-        aaa: "AAA Warning"
-    };
-
-    return `
-    <svg width="640" height="300" viewBox="0 0 640 300" role="img" aria-label="${labels[type]} triangle diagram">
-        <rect x="0" y="0" width="640" height="300" fill="#ffffff"/>
-        
-        <polygon points="80,220 190,220 125,80" fill="#eefaf1" stroke="#0f2d44" stroke-width="4"/>
-        <polygon points="400,220 510,220 445,80" fill="#f0f7fb" stroke="#0f2d44" stroke-width="4"/>
-
-        <text x="80" y="245" font-size="18" fill="#0f2d44" font-weight="bold">A</text>
-        <text x="190" y="245" font-size="18" fill="#0f2d44" font-weight="bold">B</text>
-        <text x="125" y="70" font-size="18" fill="#0f2d44" font-weight="bold">C</text>
-
-        <text x="400" y="245" font-size="18" fill="#0f2d44" font-weight="bold">D</text>
-        <text x="510" y="245" font-size="18" fill="#0f2d44" font-weight="bold">E</text>
-        <text x="445" y="70" font-size="18" fill="#0f2d44" font-weight="bold">F</text>
-
-        ${markings(type)}
-
-        <text x="320" y="35" font-size="22" text-anchor="middle" fill="#0f2d44" font-weight="bold">${labels[type]}</text>
-    </svg>`;
+function previousCase(){
+currentCase=(currentCase-1+cases.length)%cases.length;
+loadCase();
 }
 
-function markings(type) {
-    if (type === "sss") {
-        return `
-        <line x1="125" y1="214" x2="125" y2="226" stroke="#3ca65c" stroke-width="4"/>
-        <line x1="445" y1="214" x2="445" y2="226" stroke="#3ca65c" stroke-width="4"/>
+function restartActivity(){
+if(confirm("Restart the entire investigation?")){
+currentCase=0;
+selectedVerdict="";
+selectedCongruence="";
+solved=Array(cases.length).fill(false);
+attempted=Array(cases.length).fill(false);
+document.getElementById("finishScreen").classList.add("hidden");
+document.getElementById("startScreen").classList.remove("hidden");
+document.getElementById("gameScreen").classList.add("hidden");
+}
+}
 
-        <line x1="117" y1="145" x2="127" y2="150" stroke="#f2b705" stroke-width="4"/>
-        <line x1="437" y1="145" x2="447" y2="150" stroke="#f2b705" stroke-width="4"/>
+function finishActivity(){
+document.getElementById("gameScreen").classList.add("hidden");
+document.getElementById("finishScreen").classList.remove("hidden");
+}
 
-        <line x1="155" y1="145" x2="165" y2="140" stroke="#9c64a6" stroke-width="4"/>
-        <line x1="475" y1="145" x2="485" y2="140" stroke="#9c64a6" stroke-width="4"/>`;
-    }
+function updateProgress(){
+const count=solved.filter(Boolean).length;
+const percent=Math.round((count/cases.length)*100);
+document.getElementById("progressText").textContent=`${count} of ${cases.length} cases closed`;
+document.getElementById("progressFill").style.width=percent+"%";
+cases.forEach((_,i)=>{
+const b=document.getElementById("nav"+i);
+if(!b)return;
+b.className="case-btn";
+if(i===currentCase)b.classList.add("current");
+if(attempted[i]&&!solved[i])b.classList.add("open");
+if(solved[i])b.classList.add("closed");
+});
+let rank="Rookie Detective";
+if(count>=2)rank="Evidence Analyst";
+if(count>=4)rank="Triangle Specialist";
+if(count>=6)rank="Congruence Investigator";
+if(count===8)rank="Master Geometry Detective";
+document.getElementById("rankDisplay").textContent="Rank: "+rank;
+const badges=["Rookie Detective"];
+if(count>=2)badges.push("SSS Specialist");
+if(count>=4)badges.push("Angle Expert");
+if(count>=6)badges.push("Evidence Collector");
+if(count===8)badges.push("Congruence Master");
+document.getElementById("badges").innerHTML=badges.map(b=>`<span class="badge">🏅 ${b}</span>`).join("");
+}
 
-    if (type === "sas") {
-        return `
-        <line x1="125" y1="214" x2="125" y2="226" stroke="#3ca65c" stroke-width="4"/>
-        <line x1="445" y1="214" x2="445" y2="226" stroke="#3ca65c" stroke-width="4"/>
+function makeDiagram(type){
+const labels={sss:"SSS Evidence",sas:"SAS Evidence",asa:"ASA Evidence",aas:"AAS Evidence",ssa:"SSA False Lead",aaa:"AAA Warning"};
+return `
+<svg width="640" height="300" viewBox="0 0 640 300" role="img" aria-label="${labels[type]} triangle diagram">
+<rect x="0" y="0" width="640" height="300" fill="#ffffff"/>
+<polygon points="80,220 190,220 125,80" fill="#eefaf1" stroke="#0f2d44" stroke-width="4"/>
+<polygon points="400,220 510,220 445,80" fill="#f0f7fb" stroke="#0f2d44" stroke-width="4"/>
+<text x="80" y="245" font-size="18" fill="#0f2d44" font-weight="bold">A</text>
+<text x="190" y="245" font-size="18" fill="#0f2d44" font-weight="bold">B</text>
+<text x="125" y="70" font-size="18" fill="#0f2d44" font-weight="bold">C</text>
+<text x="400" y="245" font-size="18" fill="#0f2d44" font-weight="bold">D</text>
+<text x="510" y="245" font-size="18" fill="#0f2d44" font-weight="bold">E</text>
+<text x="445" y="70" font-size="18" fill="#0f2d44" font-weight="bold">F</text>
+${markings(type)}
+<text x="320" y="35" font-size="22" text-anchor="middle" fill="#0f2d44" font-weight="bold">${labels[type]}</text>
+</svg>`;
+}
 
-        <line x1="117" y1="145" x2="127" y2="150" stroke="#f2b705" stroke-width="4"/>
-        <line x1="437" y1="145" x2="447" y2="150" stroke="#f2b705" stroke-width="4"/>
-
-        <path d="M105 220 A25 25 0 0 1 92 190" fill="none" stroke="#c0392b" stroke-width="4"/>
-        <path d="M425 220 A25 25 0 0 1 412 190" fill="none" stroke="#c0392b" stroke-width="4"/>`;
-    }
-
-    if (type === "asa") {
-        return `
-        <path d="M105 220 A25 25 0 0 1 92 190" fill="none" stroke="#c0392b" stroke-width="4"/>
-        <path d="M425 220 A25 25 0 0 1 412 190" fill="none" stroke="#c0392b" stroke-width="4"/>
-
-        <path d="M165 220 A25 25 0 0 0 178 190" fill="none" stroke="#9c64a6" stroke-width="4"/>
-        <path d="M485 220 A25 25 0 0 0 498 190" fill="none" stroke="#9c64a6" stroke-width="4"/>
-
-        <line x1="125" y1="214" x2="125" y2="226" stroke="#3ca65c" stroke-width="4"/>
-        <line x1="445" y1="214" x2="445" y2="226" stroke="#3ca65c" stroke-width="4"/>`;
-    }
-
-    if (type === "aas") {
-        return `
-        <path d="M105 220 A25 25 0 0 1 92 190" fill="none" stroke="#c0392b" stroke-width="4"/>
-        <path d="M425 220 A25 25 0 0 1 412 190" fill="none" stroke="#c0392b" stroke-width="4"/>
-
-        <path d="M135 100 A25 25 0 0 1 155 125" fill="none" stroke="#9c64a6" stroke-width="4"/>
-        <path d="M455 100 A25 25 0 0 1 475 125" fill="none" stroke="#9c64a6" stroke-width="4"/>
-
-        <line x1="125" y1="214" x2="125" y2="226" stroke="#3ca65c" stroke-width="4"/>
-        <line x1="445" y1="214" x2="445" y2="226" stroke="#3ca65c" stroke-width="4"/>`;
-    }
-
-    if (type === "ssa") {
-        return `
-        <line x1="125" y1="214" x2="125" y2="226" stroke="#3ca65c" stroke-width="4"/>
-        <line x1="445" y1="214" x2="445" y2="226" stroke="#3ca65c" stroke-width="4"/>
-
-        <line x1="155" y1="145" x2="165" y2="140" stroke="#f2b705" stroke-width="4"/>
-        <line x1="475" y1="145" x2="485" y2="140" stroke="#f2b705" stroke-width="4"/>
-
-        <path d="M105 220 A25 25 0 0 1 92 190" fill="none" stroke="#c0392b" stroke-width="4"/>
-        <path d="M425 220 A25 25 0 0 1 412 190" fill="none" stroke="#c0392b" stroke-width="4"/>
-
-        <text x="320" y="275" font-size="18" text-anchor="middle" fill="#c0392b" font-weight="bold">Angle is NOT included → Not enough evidence</text>`;
-    }
-
-    if (type === "aaa") {
-        return `
-        <path d="M105 220 A25 25 0 0 1 92 190" fill="none" stroke="#c0392b" stroke-width="4"/>
-        <path d="M425 220 A25 25 0 0 1 412 190" fill="none" stroke="#c0392b" stroke-width="4"/>
-
-        <path d="M165 220 A25 25 0 0 0 178 190" fill="none" stroke="#9c64a6" stroke-width="4"/>
-        <path d="M485 220 A25 25 0 0 0 498 190" fill="none" stroke="#9c64a6" stroke-width="4"/>
-
-        <path d="M135 100 A25 25 0 0 1 155 125" fill="none" stroke="#3ca65c" stroke-width="4"/>
-        <path d="M455 100 A25 25 0 0 1 475 125" fill="none" stroke="#3ca65c" stroke-width="4"/>
-
-        <text x="320" y="275" font-size="18" text-anchor="middle" fill="#c0392b" font-weight="bold">Same angles can still mean different sizes</text>`;
-    }
-
-    return "";
+function markings(type){
+if(type==="sss")return `<line x1="125" y1="214" x2="125" y2="226" stroke="#3ca65c" stroke-width="4"/><line x1="445" y1="214" x2="445" y2="226" stroke="#3ca65c" stroke-width="4"/><line x1="117" y1="145" x2="127" y2="150" stroke="#f2b705" stroke-width="4"/><line x1="437" y1="145" x2="447" y2="150" stroke="#f2b705" stroke-width="4"/><line x1="155" y1="145" x2="165" y2="140" stroke="#9c64a6" stroke-width="4"/><line x1="475" y1="145" x2="485" y2="140" stroke="#9c64a6" stroke-width="4"/>`;
+if(type==="sas")return `<line x1="125" y1="214" x2="125" y2="226" stroke="#3ca65c" stroke-width="4"/><line x1="445" y1="214" x2="445" y2="226" stroke="#3ca65c" stroke-width="4"/><line x1="117" y1="145" x2="127" y2="150" stroke="#f2b705" stroke-width="4"/><line x1="437" y1="145" x2="447" y2="150" stroke="#f2b705" stroke-width="4"/><path d="M105 220 A25 25 0 0 1 92 190" fill="none" stroke="#c0392b" stroke-width="4"/><path d="M425 220 A25 25 0 0 1 412 190" fill="none" stroke="#c0392b" stroke-width="4"/>`;
+if(type==="asa")return `<path d="M105 220 A25 25 0 0 1 92 190" fill="none" stroke="#c0392b" stroke-width="4"/><path d="M425 220 A25 25 0 0 1 412 190" fill="none" stroke="#c0392b" stroke-width="4"/><path d="M165 220 A25 25 0 0 0 178 190" fill="none" stroke="#9c64a6" stroke-width="4"/><path d="M485 220 A25 25 0 0 0 498 190" fill="none" stroke="#9c64a6" stroke-width="4"/><line x1="125" y1="214" x2="125" y2="226" stroke="#3ca65c" stroke-width="4"/><line x1="445" y1="214" x2="445" y2="226" stroke="#3ca65c" stroke-width="4"/>`;
+if(type==="aas")return `<path d="M105 220 A25 25 0 0 1 92 190" fill="none" stroke="#c0392b" stroke-width="4"/><path d="M425 220 A25 25 0 0 1 412 190" fill="none" stroke="#c0392b" stroke-width="4"/><path d="M135 100 A25 25 0 0 1 155 125" fill="none" stroke="#9c64a6" stroke-width="4"/><path d="M455 100 A25 25 0 0 1 475 125" fill="none" stroke="#9c64a6" stroke-width="4"/><line x1="125" y1="214" x2="125" y2="226" stroke="#3ca65c" stroke-width="4"/><line x1="445" y1="214" x2="445" y2="226" stroke="#3ca65c" stroke-width="4"/>`;
+if(type==="ssa")return `<line x1="125" y1="214" x2="125" y2="226" stroke="#3ca65c" stroke-width="4"/><line x1="445" y1="214" x2="445" y2="226" stroke="#3ca65c" stroke-width="4"/><line x1="155" y1="145" x2="165" y2="140" stroke="#f2b705" stroke-width="4"/><line x1="475" y1="145" x2="485" y2="140" stroke="#f2b705" stroke-width="4"/><path d="M105 220 A25 25 0 0 1 92 190" fill="none" stroke="#c0392b" stroke-width="4"/><path d="M425 220 A25 25 0 0 1 412 190" fill="none" stroke="#c0392b" stroke-width="4"/><text x="320" y="275" font-size="18" text-anchor="middle" fill="#c0392b" font-weight="bold">Angle is NOT included → Not enough evidence</text>`;
+if(type==="aaa")return `<path d="M105 220 A25 25 0 0 1 92 190" fill="none" stroke="#c0392b" stroke-width="4"/><path d="M425 220 A25 25 0 0 1 412 190" fill="none" stroke="#c0392b" stroke-width="4"/><path d="M165 220 A25 25 0 0 0 178 190" fill="none" stroke="#9c64a6" stroke-width="4"/><path d="M485 220 A25 25 0 0 0 498 190" fill="none" stroke="#9c64a6" stroke-width="4"/><path d="M135 100 A25 25 0 0 1 155 125" fill="none" stroke="#3ca65c" stroke-width="4"/><path d="M455 100 A25 25 0 0 1 475 125" fill="none" stroke="#3ca65c" stroke-width="4"/><text x="320" y="275" font-size="18" text-anchor="middle" fill="#c0392b" font-weight="bold">Same angles can still mean different sizes</text>`;
+return "";
 }
 </script>
 </body>
